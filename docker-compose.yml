@@ -1,0 +1,14 @@
+services:
+  traefik:
+    image: 'traefik:v2.5.3'
+    container_name: 'traefik'
+    command: 
+      - '--api.insecure=true' #Enable traefik api & expose 8080 port
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+    ports: 
+      - '80:80'
+      - '8080:8080'
+    volumes: 
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
