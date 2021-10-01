@@ -2,27 +2,28 @@ services:
   traefik:
     image: traefik:v2.5.3
     container_name: traefik
-    command: 
-      - '--api.insecure=true' #Enable traefik api & expose 8080 port
-      - '--providers.docker=true'
-      - '--providers.docker.exposedbydefault=false'
-      - '--entrypoints.web.address=:80'
-    ports: 
+    command:
+      - "--api.insecure=true" #Enable traefik api & expose 8080 port
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
       - 80:80
       - 8080:8080
-    volumes: 
+    volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
 
   traefik-auto-mdns:
     image: hardillb/traefik-avahi-helper
     container_name: traefik-auto-mdns
-    volumes: 
+    volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
     depends_on:
       - traefik
       - qbittorrent
+      - pihole
 
   qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
@@ -39,8 +40,25 @@ services:
     depends_on:
       - traefik
     restart: unless-stopped
-    labels: 
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.local`)'
-#      - 'traefik.http.routers.qbittorrent.entrypoints=web'
-      - 'traefik.http.services.qbittorrent.loadbalancer.server.port=8080'    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.local`)"
+      #      - 'traefik.http.routers.qbittorrent.entrypoints=web'
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    entrypoint:
+      - TZ=Europe/Warsaw
+      - WEBPASSWORD=pihole
+    volumes:
+      - /mnt/external_hdd/config/pihole/etc-pihole/:/etc/pihole/
+      - /mnt/external_hdd/config/pihole/etc-dnsmasq.d/:/etc/etc-dnsmasq.d/
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`pihole.local`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=web"
