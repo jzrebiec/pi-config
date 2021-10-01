@@ -49,7 +49,7 @@ services:
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
-    entrypoint:
+    environment:
       - TZ=Europe/Warsaw
       - WEBPASSWORD=pihole
     volumes:
