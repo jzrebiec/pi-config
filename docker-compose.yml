@@ -22,6 +22,7 @@ services:
       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
     depends_on:
       - traefik
+      - qbittorrent
 
   qbittorrent:
     image: ghcr.io/linuxserver/qbittorrent
