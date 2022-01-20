@@ -62,11 +62,28 @@ chsh -s $(which zsh)
 ```sh
 sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 ```
+* Other
+```sh
+sudo apt install fonts-powerline fonts-firacode
+```
+* Plugins
+
+    * [autosugestions](https://github.com/zsh-users/zsh-autosuggestions)
+    * [syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
 
 ### Samba server
 
 ### Docker
 
+```sh
+curl -sSL https://get.docker.com | sh
+
+sudo usermod -aG docker user_name
+
+sudo install python3 python3-pip
+
+sudo pip3 -v install docker-compose
+```
 
 ## Links
 * [IOTstack](https://github.com/SensorsIot/IOTstack)
