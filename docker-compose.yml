@@ -1,68 +1,69 @@
 services:
-  traefik:
-    image: traefik:v2.5.3
-    container_name: traefik
-    command:
-      - "--api.insecure=true" #Enable traefik api & expose 8080 port
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - 80:80
-      - 8080:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: always
+  # traefik:
+  #   image: traefik:v2.5.3
+  #   container_name: traefik
+  #   command:
+  #     - "--api.insecure=true" #Enable traefik api & expose 8080 port
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #   ports:
+  #     - 80:80
+  #     - 8080:8080
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   restart: always
 
-  traefik-auto-mdns:
-    image: hardillb/traefik-avahi-helper
-    container_name: traefik-auto-mdns
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
-    depends_on:
-      - traefik
-      - qbittorrent
-#      - pihole
+  # traefik-auto-mdns:
+  #   image: hardillb/traefik-avahi-helper
+  #   container_name: traefik-auto-mdns
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+  #   depends_on:
+  #     - traefik
+  #     - qbittorrent
+  #      - pihole
 
-  qbittorrent:
-    image: ghcr.io/linuxserver/qbittorrent
-    container_name: qbittorrent
-    environment:
-      - TZ=Europe/Warsaw
-      - WEBUI_PORT=8080
-    volumes:
-      - /mnt/external_hdd/config/qbittorrent:/config
-      - /mnt/external_hdd/downloads:/downloads
-    ports:
-      - 6881:6881
-      - 6881:6881/udp
-    depends_on:
-      - traefik
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.local`)"
-      #      - 'traefik.http.routers.qbittorrent.entrypoints=web'
-      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+  # qbittorrent:
+  #   image: ghcr.io/linuxserver/qbittorrent
+  #   container_name: qbittorrent
+  #   environment:
+  #     - TZ=Europe/Warsaw
+  #     - WEBUI_PORT=8080
+  #   volumes:
+  #     - /mnt/external_hdd/config/qbittorrent:/config
+  #     - /mnt/external_hdd/downloads:/downloads
+  #   ports:
+  #     - 6881:6881
+  #     - 6881:6881/udp
+  #   depends_on:
+  #     - traefik
+  #   restart: unless-stopped
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.local`)"
+  #     #      - 'traefik.http.routers.qbittorrent.entrypoints=web'
+  #     - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
-#  pihole:
-#    image: pihole/pihole:latest
-#    container_name: pihole
-#    ports:
-#      - 53:53/tcp
-#      - 53:53/udp
-#      - 67:67/udp
-#    environment:
-#      - TZ=Europe/Warsaw
-#      - WEBPASSWORD=pihole
-#    volumes:
-#      - /mnt/external_hdd/config/pihole/etc-pihole/:/etc/pihole/
-#      - /mnt/external_hdd/config/pihole/etc-dnsmasq.d/:/etc/etc-dnsmasq.d/
-#    cap_add:
-#      - NET_ADMIN
-#    restart: unless-stopped
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.pihole.rule=Host(`pihole.local`)"
-#      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+ pihole:
+   image: pihole/pihole:latest
+   container_name: pihole
+   ports:
+     - 53:53/tcp
+     - 53:53/udp
+     - 67:67/udp
+     - 80:80/tcp
+   environment:
+     - TZ=Europe/Warsaw
+     - WEBPASSWORD=pihole
+   volumes:
+     - /home/kuba/data/config/pihole/etc-pihole:/etc/pihole
+     - /home/kuba/data/config/pihole/etc-dnsmasq.d:/etc/etc-dnsmasq.d
+   cap_add:
+     - NET_ADMIN
+   restart: unless-stopped
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.pihole.rule=Host(`pihole.local`)"
+  #    - "traefik.http.services.pihole.loadbalancer.server.port=80"
