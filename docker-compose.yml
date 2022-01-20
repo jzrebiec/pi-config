@@ -1,18 +1,18 @@
 services:
-  # traefik:
-  #   image: traefik:v2.5.3
-  #   container_name: traefik
-  #   command:
-  #     - "--api.insecure=true" #Enable traefik api & expose 8080 port
-  #     - "--providers.docker=true"
-  #     - "--providers.docker.exposedbydefault=false"
-  #     - "--entrypoints.web.address=:80"
-  #   ports:
-  #     - 80:80
-  #     - 8080:8080
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #   restart: always
+  traefik:
+    image: traefik:v2.5.3
+    container_name: traefik
+    command:
+      - "--api.insecure=true" #Enable traefik api & expose 8080 port
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
 
   # traefik-auto-mdns:
   #   image: hardillb/traefik-avahi-helper
@@ -53,7 +53,7 @@ services:
      - 53:53/tcp
      - 53:53/udp
      - 67:67/udp
-     - 80:80/tcp
+     - 9000:80/tcp
    environment:
      - TZ=Europe/Warsaw
      - WEBPASSWORD=pihole
@@ -63,7 +63,9 @@ services:
    cap_add:
      - NET_ADMIN
    restart: unless-stopped
-  #  labels:
-  #    - "traefik.enable=true"
-  #    - "traefik.http.routers.pihole.rule=Host(`pihole.local`)"
-  #    - "traefik.http.services.pihole.loadbalancer.server.port=80"
+   depends_on:
+    - traefik
+   labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.pihole.rule=Host(`pihole.lan`)"
+     - "traefik.http.services.pihole.loadbalancer.server.port=9000"
