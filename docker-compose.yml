@@ -62,7 +62,7 @@ services:
       - /home/kuba/data/config/pihole/etc-dnsmasq.d:/etc/etc-dnsmasq.d
     cap_add:
       - NET_ADMIN
-    restart: unless-stopped
+    restart: always
     depends_on:
       - traefik
     labels:
