@@ -75,6 +75,7 @@ sudo apt install fonts-powerline fonts-firacode
 
 ### Docker
 
+* Install
 ```sh
 curl -sSL https://get.docker.com | sh
 
@@ -83,6 +84,11 @@ sudo usermod -aG docker user_name
 sudo install python3 python3-pip
 
 sudo pip3 -v install docker-compose
+```
+
+* Enable auto-startup
+```sh
+sudo systemctl enable docker
 ```
 
 ## Links
