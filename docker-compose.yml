@@ -14,17 +14,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
 
-  # traefik-auto-mdns:
-  #   image: hardillb/traefik-avahi-helper
-  #   container_name: traefik-auto-mdns
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
-  #   depends_on:
-  #     - traefik
-  #     - qbittorrent
-  #      - pihole
-
   # qbittorrent:
   #   image: ghcr.io/linuxserver/qbittorrent
   #   container_name: qbittorrent
