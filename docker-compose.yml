@@ -14,26 +14,25 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: always
 
-  # qbittorrent:
-  #   image: ghcr.io/linuxserver/qbittorrent
-  #   container_name: qbittorrent
-  #   environment:
-  #     - TZ=Europe/Warsaw
-  #     - WEBUI_PORT=8080
-  #   volumes:
-  #     - /mnt/external_hdd/config/qbittorrent:/config
-  #     - /mnt/external_hdd/downloads:/downloads
-  #   ports:
-  #     - 6881:6881
-  #     - 6881:6881/udp
-  #   depends_on:
-  #     - traefik
-  #   restart: unless-stopped
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.local`)"
-  #     #      - 'traefik.http.routers.qbittorrent.entrypoints=web'
-  #     - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+  qbittorrent:
+    image: ghcr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - TZ=Europe/Warsaw
+      - WEBUI_PORT=8080
+    volumes:
+      - /mnt/external_hdd/config/qbittorrent:/config
+      - /mnt/external_hdd/downloads:/downloads
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+    depends_on:
+      - traefik
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.lan`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
   adguard:
     image: adguard/adguardhome:latest
@@ -42,8 +41,8 @@ services:
       - 53:53/tcp
       - 53:53/udp
     volumes:
-      - /home/kuba/data/config/adguard/work:/opt/adguardhome/work
-      - /home/kuba/data/config/adguard/conf:/opt/adguardhome/conf
+      - /mnt/external_hdd/config/adguard/work:/opt/adguardhome/work
+      - /mnt/external_hdd/config/adguard/conf:/opt/adguardhome/conf
     restart: always
     depends_on:
       - traefik
