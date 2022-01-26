@@ -15,7 +15,7 @@ services:
     restart: always
 
   qbittorrent:
-    image: ghcr.io/linuxserver/qbittorrent
+    image: ghcr.io/linuxserver/qbittorrent:14.3.9
     container_name: qbittorrent
     environment:
       - TZ=Europe/Warsaw
