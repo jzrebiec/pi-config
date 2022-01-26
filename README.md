@@ -91,6 +91,22 @@ sudo pip3 -v install docker-compose
 sudo systemctl enable docker
 ```
 
+### Mount external drive
+```
+sudo mkdir /mnt/external_hdd
+sudo chown -R USER:USER /mnt/external_hdd
+```
+
+* Get UUID
+```sh
+sudo blkid
+```
+
+* Edit /etc/fstab
+```
+UUID="UUID FROM blkid" /mnt/external_hdd ext4 defaults,auto,users,rw,nofail,noatime 0 0
+```
+
 ## Links
 * [IOTstack](https://github.com/SensorsIot/IOTstack)
 * [Oh my zsh](https://ohmyz.sh/)
