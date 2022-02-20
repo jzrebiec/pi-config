@@ -52,7 +52,7 @@ services:
       - "traefik.http.services.adguard.loadbalancer.server.port=80"
 
   zerotier:
-    image: zyclonite/zerotier:latest
+    image: zyclonite/zerotier:bridge
     container_name: zerotier
     devices:
       - /dev/net/tun:/dev/net/tun
@@ -60,6 +60,7 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_ADMIN
+      - NET_RAW
     volumes:
       - /mnt/external_hdd_config/zerotier:/var/lib/zerotier-one
     restart: always
