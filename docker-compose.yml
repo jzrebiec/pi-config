@@ -52,7 +52,7 @@ services:
       - "traefik.http.services.adguard.loadbalancer.server.port=80"
 
   zerotier:
-    image: zerotier/zerotier:latest
+    image: zyclonite/zerotier:latest
     container_name: zerotier
     devices:
       - /dev/net/tun:/dev/net/tun
